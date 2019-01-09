@@ -9,7 +9,7 @@ company: Buoyant
 company-link: https://buoyant.io
 ---
 
-_This is a guest post by [William Morgan](https://linkedin.com/in/wmorgan), Linkerd maintainer._
+_This is a guest post by [William Morgan](https://linkedin.com/in/wmorgan), [Linkerd](https://linkerd.io) maintainer._
 
 Many new gRPC users are surprised to find that Kubernetes's default load
 balancing often doesn't work out of the box with gRPC. For example, here's what
