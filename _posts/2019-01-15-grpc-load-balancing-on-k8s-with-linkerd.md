@@ -9,15 +9,14 @@ company: Buoyant
 company-link: https://buoyant.io
 ---
 
-_This is a guest post by_
-_[William Morgan](https://linkedin.com/in/wmorgan), Linkerd maintainer.
+_This is a guest post by [William Morgan](https://linkedin.com/in/wmorgan), Linkerd maintainer._
 
 Many new gRPC users are surprised to find that Kubernetes's default load
 balancing often doesn't work out of the box with gRPC. For example, here's what
 happens when you take a [simple gRPC Node.js microservices
 app](https://github.com/sourishkrout/nodevoto) and deploy it on Kubernetes:
 
-![](/img/grpc-load-balancing-with-linkerd/Screenshot2018-11-0116-c4d86100-afc1-4a08-a01c-16da391756dd.34.36.png)
+![](../img/grpc-load-balancing-with-linkerd/Screenshot2018-11-0116-c4d86100-afc1-4a08-a01c-16da391756dd.34.36.png)
 
 While the `voting` service displayed here has several pods, it's clear from
 Kubernetes's CPU graphs that only one of the pods is actually doing any
@@ -46,7 +45,7 @@ it reduces the overhead of connection management. However, it also means that
 connection is established, there's no more balancing to be done. All requests
 will get pinned to a single destination pod, as shown below:
 
-![](/img/grpc-load-balancing-with-linkerd/Mono-8d2e53ef-b133-4aa0-9551-7e36a880c553.png)
+![](../img/grpc-load-balancing-with-linkerd/Mono-8d2e53ef-b133-4aa0-9551-7e36a880c553.png)
 
 # Why doesn't this affect HTTP/1.1?
 
@@ -76,7 +75,7 @@ do gRPC load balancing, we need to shift from connection balancing to *request*
 balancing. In other words, we need to open an HTTP/2 connection to each
 destination, and balance *requests* across these connections, as shown below:
 
-![](/img/grpc-load-balancing-with-linkerd/Stereo-09aff9d7-1c98-4a0a-9184-9998ed83a531.png)
+![](../img/grpc-load-balancing-with-linkerd/Stereo-09aff9d7-1c98-4a0a-9184-9998ed83a531.png)
 
 In network terms, this means we need to make decisions at L5/L7 rather than
 L3/L4, i.e. we need to understand the protocol sent over the TCP connections. 
@@ -110,7 +109,7 @@ service, it adds a tiny, ultra-fast proxy to each pod, and these proxies watch
 the Kubernetes API and do gRPC load balancing automatically. Our deployment
 then looks like this:
 
-![](/img/grpc-load-balancing-with-linkerd/Linkerd-8df1031c-cdd1-4164-8e91-00f2d941e93f.io.png)
+![](../img/grpc-load-balancing-with-linkerd/Linkerd-8df1031c-cdd1-4164-8e91-00f2d941e93f.io.png)
 
 Using Linkerd has a couple advantages. First, it works with services written in
 any language, with any gRPC client, and any deployment model (headless or not).
@@ -140,7 +139,7 @@ service in no time, and should see proper gRPC balancing immediately.
 Let's take a look at our sample `voting` service again, this time after
 installing Linkerd:
 
-![](/img/grpc-load-balancing-with-linkerd/Screenshot2018-11-0116-24b8ee81-144c-4eac-b73d-871bbf0ea22e.57.42.png)
+![](../img/grpc-load-balancing-with-linkerd/Screenshot2018-11-0116-24b8ee81-144c-4eac-b73d-871bbf0ea22e.57.42.png)
 
 As we can see, the CPU graphs for all pods are active, indicating that all pods
 are now taking traffic&mdash;without having to change a line of code. Voila,
@@ -151,7 +150,7 @@ to guess what's happening from CPU charts any more. Here's a Linkerd graph
 that's showing the success rate, request volume, and latency percentiles of
 each pod:
 
-![](/img/grpc-load-balancing-with-linkerd/Screenshot2018-11-0212-15ed0448-5424-4e47-9828-20032de868b5.08.38.png)
+![](../img/grpc-load-balancing-with-linkerd/Screenshot2018-11-0212-15ed0448-5424-4e47-9828-20032de868b5.08.38.png)
 
 We can see that each pod is getting around 5 RPS. We can also see that, while
 we've solved our load balancing problem, we still have some work to do on our
